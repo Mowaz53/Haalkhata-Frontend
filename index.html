@@ -703,6 +703,14 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&document.getElementById('overlay').classList.contains('show')) submitTx();
 });
 window.speechSynthesis&&speechSynthesis.addEventListener('voiceschanged',()=>{});
+// Keep Render backend alive — ping every 10 minutes
+function keepAlive() {
+  const url = getApiUrl();
+  if (url) {
+    fetch(`${url}/health`).catch(() => {});
+  }
+}
+setInterval(keepAlive, 10 * 60 * 1000);  
 renderLog();
 toast('হালখাতা ready — connect API for real detection','warn','🔗');
 </script>
