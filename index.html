@@ -466,7 +466,7 @@ async function captureFrame() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: b64 }),
-      signal: AbortSignal.timeout(30000),
+      signal: AbortSignal.timeout(200000),
     });
 
     if (!resp.ok) throw new Error(`API error ${resp.status}`);
