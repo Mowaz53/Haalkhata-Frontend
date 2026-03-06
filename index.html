@@ -3,233 +3,454 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<meta name="theme-color" content="#080b12"/>
+<meta name="theme-color" content="#050810"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<title>হালখাতা · Haalkhata</title>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<title>Haalkhata Engine V02</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-:root {
-  --bg:#080b12; --card:#0e1320; --card2:#131928; --border:rgba(255,255,255,0.07);
-  --accent:#00f5aa; --blue:#3d8bff; --warn:#ffb84d; --danger:#ff5566;
-  --text:#eef0f6; --muted:#4a5670;
-  --serif:'Instrument Serif',serif; --mono:'DM Mono',monospace; --body:'Outfit',sans-serif;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+:root{
+  --bg:#050810;
+  --card:#0b0f1c;
+  --card2:#101628;
+  --border:rgba(255,255,255,0.06);
+  --gem:#a78bfa;
+  --gem2:#7c3aed;
+  --gem-glow:rgba(167,139,250,0.25);
+  --accent:#00e5ff;
+  --warn:#fbbf24;
+  --danger:#f87171;
+  --green:#34d399;
+  --text:#f0f2fa;
+  --muted:#3d4a6a;
+  --display:'Bebas Neue',sans-serif;
+  --mono:'DM Mono',monospace;
+  --body:'Plus Jakarta Sans',sans-serif;
   --safe-bottom:env(safe-area-inset-bottom,0px);
 }
-html{height:100%}
-body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:100%;overscroll-behavior:none;padding-bottom:calc(88px + var(--safe-bottom));}
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(rgba(255,255,255,0.05) 1px,transparent 1px);background-size:28px 28px;}
-.wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 16px;}
+html{height:100%;}
+body{font-family:var(--body);background:var(--bg);color:var(--text);min-height:100%;overscroll-behavior:none;padding-bottom:calc(96px + var(--safe-bottom));}
 
-/* topbar */
-.topbar{position:sticky;top:0;z-index:50;background:rgba(8,11,18,0.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
-.topbar-title{font-family:var(--serif);font-size:22px;line-height:1;}
-.topbar-title em{color:var(--accent);font-style:italic;}
-.topbar-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:3px;}
-.indicators{display:flex;gap:7px;}
-.pill{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:var(--card);border:1px solid var(--border);font-family:var(--mono);font-size:10px;color:var(--muted);transition:all 0.3s;}
-.pill.on{color:var(--accent);border-color:rgba(0,245,170,0.3);background:rgba(0,245,170,0.07);}
-.pill-dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
-.pill.on .pill-dot{animation:blink 1.4s infinite;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+/* animated mesh background */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 20%, rgba(124,58,237,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 35% at 80% 80%, rgba(0,229,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 60% 10%, rgba(167,139,250,0.06) 0%, transparent 50%);
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,0.04) 1px,transparent 1px);
+  background-size:24px 24px;
+}
 
-/* api config banner */
-.api-banner{margin:14px 0 0;padding:12px 14px;background:rgba(255,184,77,0.08);border:1px solid rgba(255,184,77,0.3);border-radius:14px;display:flex;align-items:center;gap:10px;}
-.api-banner.connected{background:rgba(0,245,170,0.07);border-color:rgba(0,245,170,0.3);}
-.api-banner-icon{font-size:18px;flex-shrink:0;}
-.api-banner-text{flex:1;font-family:var(--mono);font-size:11px;color:var(--warn);}
-.api-banner.connected .api-banner-text{color:var(--accent);}
-.api-input-row{display:flex;gap:8px;margin-top:8px;}
-.api-input{flex:1;height:38px;padding:0 12px;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:10px;font-family:var(--mono);font-size:11px;outline:none;}
-.api-input:focus{border-color:var(--accent);}
+.wrap{position:relative;z-index:1;max-width:480px;margin:0 auto;padding:0 15px;}
 
-/* section */
-.section{margin:16px 0;}
-.section-label{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px;padding:0 2px;}
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(5,8,16,0.92);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:10px 15px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo-area{display:flex;flex-direction:column;gap:1px;}
+.logo-v1{font-family:var(--display);font-size:26px;letter-spacing:1px;line-height:1;
+  background:linear-gradient(135deg,#fff 0%,var(--gem) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.logo-v2{font-family:var(--mono);font-size:9px;color:var(--gem);letter-spacing:3px;text-transform:uppercase;}
+.top-pills{display:flex;gap:6px;}
+.tpill{
+  padding:4px 9px;border-radius:20px;
+  font-family:var(--mono);font-size:9px;
+  background:var(--card);border:1px solid var(--border);
+  color:var(--muted);display:flex;align-items:center;gap:4px;
+  transition:all 0.3s;
+}
+.tpill.on{color:var(--gem);border-color:rgba(167,139,250,0.4);background:rgba(167,139,250,0.08);}
+.tpill-dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+.tpill.on .tpill-dot{animation:tdot 1.5s infinite;}
+@keyframes tdot{0%,100%{opacity:1}50%{opacity:0.2}}
 
-/* camera */
+/* ── SECTIONS ── */
+.section{margin:14px 0;}
+.sec-label{
+  font-family:var(--mono);font-size:9px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:2px;margin-bottom:9px;padding:0 1px;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── API KEY CARD ── */
+.key-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:16px;
+  transition:border-color 0.3s;
+}
+.key-card.connected{border-color:rgba(167,139,250,0.4);}
+.key-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.key-icon{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--gem2),#4f46e5);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+  flex-shrink:0;
+}
+.key-title{font-size:13px;font-weight:700;}
+.key-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:2px;}
+.key-status{font-family:var(--mono);font-size:10px;margin-bottom:10px;
+  padding:6px 10px;border-radius:8px;
+  background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);
+  color:var(--warn);}
+.key-status.ok{background:rgba(52,211,153,0.08);border-color:rgba(52,211,153,0.2);color:var(--green);}
+.key-row{display:flex;gap:8px;}
+.key-input{
+  flex:1;height:44px;padding:0 12px;
+  background:var(--card2);color:var(--text);
+  border:1px solid var(--border);border-radius:10px;
+  font-family:var(--mono);font-size:12px;outline:none;
+  -webkit-appearance:none;transition:border-color 0.2s;
+}
+.key-input:focus{border-color:var(--gem);}
+.key-link{
+  font-family:var(--mono);font-size:10px;color:var(--gem);
+  text-decoration:none;display:block;margin-top:8px;opacity:0.7;
+}
+
+/* ── CAMERA ── */
 .cam-card{border-radius:20px;overflow:hidden;border:1px solid var(--border);background:var(--card);}
-#videoWrap{position:relative;width:100%;aspect-ratio:4/3;background:#04060d;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+#videoWrap{
+  position:relative;width:100%;aspect-ratio:4/3;
+  background:#02040a;display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
 #video{width:100%;height:100%;object-fit:cover;display:none;}
 #canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
-.cam-idle{display:flex;flex-direction:column;align-items:center;gap:10px;color:var(--muted);}
-.cam-idle-icon{font-size:40px;opacity:0.2;}
-.cam-idle-text{font-family:var(--mono);font-size:12px;opacity:0.5;}
-#videoWrap.live::after{content:'';position:absolute;left:0;right:0;top:0;height:2px;z-index:5;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:scan 2.4s linear infinite;}
-@keyframes scan{from{top:0}to{top:100%}}
-.cam-badge{position:absolute;top:10px;left:10px;z-index:10;background:rgba(255,0,0,0.85);color:#fff;font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:6px;display:none;}
+.cam-idle{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--muted);}
+.cam-idle-icon{font-size:36px;opacity:0.15;}
+.cam-idle-text{font-family:var(--mono);font-size:11px;opacity:0.4;}
+
+/* gemini scan effect */
+#videoWrap.live::after{
+  content:'';position:absolute;left:0;right:0;top:0;height:2px;z-index:5;
+  background:linear-gradient(90deg,transparent,var(--gem),transparent);
+  animation:gscan 3s linear infinite;
+}
+@keyframes gscan{from{top:0}to{top:100%}}
+
+/* corner overlays */
+.corner{position:absolute;width:20px;height:20px;z-index:6;}
+.corner-tl{top:10px;left:10px;border-top:2px solid var(--gem);border-left:2px solid var(--gem);}
+.corner-tr{top:10px;right:10px;border-top:2px solid var(--gem);border-right:2px solid var(--gem);}
+.corner-bl{bottom:10px;left:10px;border-bottom:2px solid var(--gem);border-left:2px solid var(--gem);}
+.corner-br{bottom:10px;right:10px;border-bottom:2px solid var(--gem);border-right:2px solid var(--gem);}
+
+.cam-badge{
+  position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:10;
+  background:rgba(167,139,250,0.9);color:#000;
+  font-family:var(--mono);font-size:9px;font-weight:500;
+  padding:3px 10px;border-radius:6px;display:none;letter-spacing:1px;
+}
 #videoWrap.live .cam-badge{display:block;}
-.processing-overlay{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,0.6);display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
-.processing-overlay.show{display:flex;}
-.spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-.processing-text{font-family:var(--mono);font-size:12px;color:var(--accent);}
-.cam-actions{padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
-/* buttons */
-.btn{border:none;cursor:pointer;border-radius:14px;font-family:var(--body);font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform 0.12s,opacity 0.12s;-webkit-user-select:none;user-select:none;}
-.btn:active{transform:scale(0.95);opacity:0.85;}
-.btn:disabled{opacity:0.35;pointer-events:none;}
-.btn-lg{height:56px;font-size:15px;width:100%;}
-.btn-md{height:48px;font-size:14px;width:100%;}
-.btn-sm{height:36px;font-size:12px;padding:0 14px;}
-.btn-green{background:var(--accent);color:#000;}
+/* processing overlay */
+.proc-overlay{
+  position:absolute;inset:0;z-index:20;
+  background:rgba(5,8,16,0.85);
+  display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;
+}
+.proc-overlay.show{display:flex;}
+.gem-spinner{
+  width:50px;height:50px;position:relative;
+}
+.gem-spinner::before,.gem-spinner::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  border:2px solid transparent;
+}
+.gem-spinner::before{
+  border-top-color:var(--gem);border-right-color:var(--gem);
+  animation:spin1 1s linear infinite;
+}
+.gem-spinner::after{
+  border-bottom-color:var(--accent);border-left-color:var(--accent);
+  animation:spin1 1.5s linear infinite reverse;inset:6px;
+}
+@keyframes spin1{to{transform:rotate(360deg)}}
+.proc-text{font-family:var(--mono);font-size:11px;color:var(--gem);letter-spacing:1px;}
+.proc-step{font-family:var(--mono);font-size:10px;color:var(--muted);}
+
+.cam-actions{padding:12px 13px;display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+
+/* ── BUTTONS ── */
+.btn{
+  border:none;cursor:pointer;border-radius:13px;
+  font-family:var(--body);font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  transition:transform 0.12s,opacity 0.12s,box-shadow 0.2s;
+  -webkit-user-select:none;user-select:none;
+}
+.btn:active{transform:scale(0.94);opacity:0.8;}
+.btn:disabled{opacity:0.3;pointer-events:none;}
+.btn-lg{height:54px;font-size:14px;width:100%;}
+.btn-md{height:46px;font-size:13px;width:100%;}
+.btn-sm{height:34px;font-size:11px;padding:0 13px;border-radius:9px;}
+.btn-gem{background:linear-gradient(135deg,var(--gem2),#6366f1);color:#fff;}
+.btn-gem:hover{box-shadow:0 4px 20px var(--gem-glow);}
 .btn-dark{background:var(--card2);color:var(--text);border:1px solid var(--border);}
-.btn-blue{background:rgba(61,139,255,0.15);color:var(--blue);border:1px solid rgba(61,139,255,0.3);}
-.btn-warn{background:rgba(255,184,77,0.12);color:var(--warn);border:1px solid rgba(255,184,77,0.3);}
-.btn-icon{font-size:20px;line-height:1;}
+.btn-cyan{background:rgba(0,229,255,0.1);color:var(--accent);border:1px solid rgba(0,229,255,0.25);}
+.btn-danger{background:rgba(248,113,113,0.1);color:var(--danger);border:1px solid rgba(248,113,113,0.25);}
 
-/* voice */
+/* ── VOICE ── */
 .voice-card{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;}
-.voice-inner{padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:14px;}
-.mic-btn{width:88px;height:88px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#1a3a5c,#0a1a2e);border:2px solid rgba(61,139,255,0.3);display:flex;align-items:center;justify-content:center;font-size:34px;cursor:pointer;position:relative;transition:transform 0.15s,border-color 0.3s;-webkit-tap-highlight-color:transparent;}
-.mic-btn:active{transform:scale(0.93);}
-.mic-btn.on{border-color:var(--accent);background:radial-gradient(circle at 35% 30%,#003d28,#001a12);animation:micGlow 2s infinite;}
-@keyframes micGlow{0%,100%{box-shadow:0 0 0 0 rgba(0,245,170,0.4)}50%{box-shadow:0 0 0 20px rgba(0,245,170,0)}}
-.mic-ring{position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--accent);opacity:0;}
-.mic-btn.on .mic-ring{opacity:0.4;animation:ringPop 1.8s infinite;}
-@keyframes ringPop{0%{transform:scale(1);opacity:0.4}100%{transform:scale(1.5);opacity:0}}
-.voice-label{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:center;transition:color 0.3s;}
-.voice-label.on{color:var(--accent);}
-.bars{display:flex;align-items:center;gap:4px;height:28px;}
-.bar{width:5px;border-radius:3px;background:var(--border);height:4px;transition:background 0.2s;}
-.bars.on .bar{background:var(--accent);animation:barAnim 0.6s ease-in-out infinite alternate;}
-.bars.on .bar:nth-child(1){animation-delay:0s}.bars.on .bar:nth-child(2){animation-delay:.1s}.bars.on .bar:nth-child(3){animation-delay:.2s}.bars.on .bar:nth-child(4){animation-delay:.12s}.bars.on .bar:nth-child(5){animation-delay:.05s}.bars.on .bar:nth-child(6){animation-delay:.18s}.bars.on .bar:nth-child(7){animation-delay:.08s}
-@keyframes barAnim{from{height:4px}to{height:26px}}
-.heard-box{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:10px 14px;font-family:var(--mono);font-size:12px;color:var(--muted);min-height:42px;transition:border-color 0.3s;}
-.heard-box.lit{color:var(--text);border-color:var(--blue);}
-.heard-cap{font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;color:var(--muted);}
+.voice-inner{padding:18px 15px;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.mic-btn{
+  width:72px;height:72px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#2d1b69,#110d2e);
+  border:2px solid rgba(167,139,250,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:30px;cursor:pointer;position:relative;z-index:1;
+  transition:transform 0.15s,border-color 0.3s;
+  -webkit-tap-highlight-color:transparent;
+}
+.mic-btn:active{transform:scale(0.91);}
+.mic-btn.on{
+  border-color:var(--gem);
+  background:radial-gradient(circle at 35% 30%,#3b1f8c,#1a0d45);
+  animation:mglow 2s infinite;
+}
+@keyframes mglow{0%,100%{box-shadow:0 0 0 0 rgba(167,139,250,0.5)}50%{box-shadow:0 0 0 18px rgba(167,139,250,0)}}
+.mic-ring{position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--gem);opacity:0;transition:opacity 0.3s;}
+.mic-btn.on .mic-ring{opacity:0.35;animation:mring 1.8s infinite;}
+@keyframes mring{0%{transform:scale(1);opacity:0.35}100%{transform:scale(1.6);opacity:0}}
+.voice-label{font-family:var(--mono);font-size:11px;color:var(--muted);transition:color 0.3s;}
+.voice-label.on{color:var(--gem);}
+.bars{display:flex;align-items:center;gap:3px;height:26px;}
+.bar{width:4px;border-radius:2px;background:var(--border);height:4px;transition:background 0.2s;}
+.bars.on .bar{background:var(--gem);animation:ba 0.6s ease-in-out infinite alternate;}
+.bars.on .bar:nth-child(1){animation-delay:0s}.bars.on .bar:nth-child(2){animation-delay:.1s}
+.bars.on .bar:nth-child(3){animation-delay:.2s}.bars.on .bar:nth-child(4){animation-delay:.12s}
+.bars.on .bar:nth-child(5){animation-delay:.05s}.bars.on .bar:nth-child(6){animation-delay:.18s}
+.bars.on .bar:nth-child(7){animation-delay:.08s}
+@keyframes ba{from{height:4px}to{height:24px}}
+.heard-box{
+  width:100%;background:var(--card2);border:1px solid var(--border);
+  border-radius:11px;padding:9px 13px;font-family:var(--mono);font-size:11px;
+  color:var(--muted);min-height:40px;transition:border-color 0.3s;
+}
+.heard-box.lit{color:var(--text);border-color:var(--gem);}
+.heard-cap{font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;color:var(--muted);}
 
-/* commands */
-.cmd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.cmd-btn{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;cursor:pointer;transition:border-color 0.2s,transform 0.12s;-webkit-tap-highlight-color:transparent;}
-.cmd-btn:active{transform:scale(0.96);}
-.cmd-btn:hover{border-color:rgba(0,245,170,0.35);}
-.cmd-emoji{font-size:22px;}
-.cmd-say{font-family:var(--mono);font-size:9px;color:var(--accent);background:rgba(0,245,170,0.1);padding:2px 7px;border-radius:5px;}
-.cmd-desc{font-size:12px;color:var(--muted);line-height:1.3;}
+/* ── COMMANDS ── */
+.cmd-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.cmd-btn{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:14px;padding:13px 11px;
+  display:flex;flex-direction:column;align-items:flex-start;gap:5px;
+  cursor:pointer;transition:border-color 0.2s,transform 0.12s;
+  -webkit-tap-highlight-color:transparent;
+}
+.cmd-btn:active{transform:scale(0.95);}
+.cmd-btn:hover{border-color:rgba(167,139,250,0.35);}
+.cmd-emoji{font-size:20px;}
+.cmd-say{font-family:var(--mono);font-size:9px;color:var(--gem);background:rgba(167,139,250,0.1);padding:2px 7px;border-radius:4px;}
+.cmd-desc{font-size:11px;color:var(--muted);line-height:1.3;}
 
-/* detected */
-.detected-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
-.detected-scroll::-webkit-scrollbar{display:none;}
-.det-card{flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 14px;min-width:155px;display:flex;flex-direction:column;gap:8px;animation:cardIn 0.25s ease;}
-@keyframes cardIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
-.det-card-label{font-size:13px;font-weight:600;}
-.det-card-ocr{font-family:var(--mono);font-size:10px;color:var(--muted);word-break:break-word;}
-.det-card-conf{font-family:var(--mono);font-size:10px;color:var(--accent);background:rgba(0,245,170,0.1);padding:2px 7px;border-radius:5px;align-self:flex-start;}
-.det-empty{font-family:var(--mono);font-size:12px;color:var(--muted);padding:16px 4px;}
+/* ── GEMINI RESULTS ── */
+.result-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:20px;overflow:hidden;
+  animation:cardIn 0.3s ease;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.result-header{
+  padding:13px 15px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;
+}
+.result-gem-badge{
+  padding:3px 10px;border-radius:20px;
+  background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(99,102,241,0.3));
+  border:1px solid rgba(167,139,250,0.3);
+  font-family:var(--mono);font-size:9px;color:var(--gem);letter-spacing:1px;
+}
+.result-title{font-size:13px;font-weight:700;flex:1;}
+.result-body{padding:14px 15px;display:flex;flex-direction:column;gap:10px;}
 
-/* annotated image */
-.annotated-wrap{margin-top:0;border-radius:14px;overflow:hidden;border:1px solid var(--border);display:none;}
-.annotated-wrap img{width:100%;display:block;}
-.annotated-label{padding:8px 12px;background:var(--card);font-family:var(--mono);font-size:10px;color:var(--muted);border-top:1px solid var(--border);}
+/* item cards from gemini */
+.det-scroll{display:flex;gap:9px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;}
+.det-scroll::-webkit-scrollbar{display:none;}
+.det-item{
+  flex-shrink:0;min-width:148px;
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:13px;padding:11px 13px;
+  display:flex;flex-direction:column;gap:7px;
+  animation:itemIn 0.25s ease;
+}
+@keyframes itemIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:none}}
+.det-name{font-size:13px;font-weight:700;line-height:1.2;}
+.det-detail{font-family:var(--mono);font-size:10px;color:var(--muted);line-height:1.4;}
+.det-conf{
+  font-family:var(--mono);font-size:9px;
+  padding:2px 7px;border-radius:4px;align-self:flex-start;
+}
+.det-conf.high{color:var(--green);background:rgba(52,211,153,0.1);}
+.det-conf.mid{color:var(--warn);background:rgba(251,191,36,0.1);}
 
-/* log */
+/* raw gemini text */
+.gem-raw{
+  background:var(--card2);border:1px solid var(--border);
+  border-radius:12px;padding:12px 14px;
+  font-family:var(--mono);font-size:11px;color:var(--text);
+  line-height:1.6;white-space:pre-wrap;word-break:break-word;
+  max-height:200px;overflow-y:auto;
+}
+.det-empty{font-family:var(--mono);font-size:11px;color:var(--muted);padding:14px 2px;text-align:center;}
+
+/* ── LOG ── */
 .log-card{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;}
-.log-header{padding:14px 16px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.log-title{font-size:14px;font-weight:700;}
-.log-count{font-family:var(--mono);font-size:11px;color:var(--muted);}
-.log-entries{max-height:280px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
-.log-row{padding:13px 16px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr auto;gap:4px;align-items:center;}
+.log-hdr{padding:13px 15px 11px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.log-hdr-title{font-size:13px;font-weight:700;}
+.log-hdr-count{font-family:var(--mono);font-size:10px;color:var(--muted);}
+.log-list{max-height:260px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+.log-row{
+  padding:12px 15px;border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:1fr auto;gap:3px;align-items:center;
+}
 .log-row:last-child{border-bottom:none;}
-.log-name{font-size:14px;font-weight:600;}
-.log-meta{font-family:var(--mono);font-size:11px;color:var(--muted);}
-.log-amt{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--accent);text-align:right;}
-.log-unit{font-family:var(--mono);font-size:10px;color:var(--muted);text-align:right;}
-.log-empty-msg{padding:28px 16px;text-align:center;font-family:var(--mono);font-size:12px;color:var(--muted);}
-.log-footer{padding:14px 16px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
-.log-footer-label{font-family:var(--mono);font-size:11px;color:var(--muted);}
-.log-total{font-family:var(--serif);font-size:24px;color:var(--accent);}
+.log-name{font-size:13px;font-weight:600;}
+.log-meta{font-family:var(--mono);font-size:10px;color:var(--muted);}
+.log-amt{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--gem);text-align:right;}
+.log-unit{font-family:var(--mono);font-size:9px;color:var(--muted);text-align:right;}
+.log-empty{padding:26px;text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);}
+.log-footer{
+  padding:13px 15px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.log-foot-lbl{font-family:var(--mono);font-size:10px;color:var(--muted);}
+.log-total{
+  font-family:var(--display);font-size:28px;letter-spacing:1px;
+  background:linear-gradient(135deg,var(--gem),var(--accent));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
 
-/* bottom nav */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(8,11,18,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:10px 16px calc(10px + var(--safe-bottom));display:flex;gap:10px;}
-.nav-btn{flex:1;height:52px;border-radius:14px;border:none;cursor:pointer;font-family:var(--body);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:7px;transition:transform 0.12s;-webkit-tap-highlight-color:transparent;}
-.nav-btn:active{transform:scale(0.94);}
-.nav-capture{background:var(--accent);color:#000;flex:1.6;}
-.nav-log{background:var(--card2);color:var(--text);border:1px solid var(--border);}
-.nav-export{background:var(--card2);color:var(--muted);border:1px solid var(--border);}
+/* ── BOTTOM NAV ── */
+.bnav{
+  position:fixed;bottom:0;left:0;right:0;z-index:50;
+  background:rgba(5,8,16,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);
+  padding:10px 15px calc(10px + var(--safe-bottom));
+  display:flex;gap:9px;
+}
+.bnav-btn{
+  flex:1;height:50px;border-radius:13px;border:none;cursor:pointer;
+  font-family:var(--body);font-size:13px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:transform 0.12s;-webkit-tap-highlight-color:transparent;
+}
+.bnav-btn:active{transform:scale(0.93);}
+.bnav-capture{background:linear-gradient(135deg,var(--gem2),#6366f1);color:#fff;flex:1.6;}
+.bnav-log{background:var(--card2);color:var(--text);border:1px solid var(--border);}
+.bnav-export{background:var(--card2);color:var(--muted);border:1px solid var(--border);}
 
-/* modal sheet */
-.overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);align-items:flex-end;justify-content:center;padding-bottom:var(--safe-bottom);}
+/* ── BOTTOM SHEET ── */
+.overlay{
+  display:none;position:fixed;inset:0;z-index:100;
+  background:rgba(0,0,0,0.82);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  align-items:flex-end;justify-content:center;padding-bottom:var(--safe-bottom);
+}
 .overlay.show{display:flex;}
-.sheet{background:var(--card);border-radius:24px 24px 0 0;border:1px solid var(--border);border-bottom:none;padding:20px 20px calc(20px + var(--safe-bottom));width:100%;max-width:480px;animation:sheetUp 0.35s cubic-bezier(0.16,1,0.3,1);max-height:92vh;overflow-y:auto;}
-@keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
-.sheet-handle{width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 20px;}
-.sheet-title{font-size:20px;font-weight:800;margin-bottom:4px;}
-.sheet-sub{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:20px;}
-.field{margin-bottom:16px;}
-.field-label{font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:7px;}
-.field-input{width:100%;height:52px;padding:0 16px;background:var(--card2);color:var(--text);border:1px solid var(--border);border-radius:12px;font-family:var(--mono);font-size:14px;outline:none;-webkit-appearance:none;appearance:none;transition:border-color 0.2s;}
-.field-input:focus{border-color:var(--accent);}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.sheet-actions{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:20px;}
+.sheet{
+  background:var(--card);border-radius:22px 22px 0 0;
+  border:1px solid var(--border);border-bottom:none;
+  padding:18px 18px calc(18px + var(--safe-bottom));
+  width:100%;max-width:480px;
+  animation:sup 0.35s cubic-bezier(0.16,1,0.3,1);
+  max-height:92vh;overflow-y:auto;
+}
+@keyframes sup{from{transform:translateY(100%)}to{transform:none}}
+.sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 18px;}
+.sheet-title{font-size:19px;font-weight:800;margin-bottom:3px;}
+.sheet-sub{font-family:var(--mono);font-size:10px;color:var(--muted);margin-bottom:18px;}
+.field{margin-bottom:14px;}
+.field-lbl{font-family:var(--mono);font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px;}
+.field-inp{
+  width:100%;height:50px;padding:0 14px;
+  background:var(--card2);color:var(--text);
+  border:1px solid var(--border);border-radius:11px;
+  font-family:var(--mono);font-size:13px;outline:none;
+  -webkit-appearance:none;transition:border-color 0.2s;
+}
+.field-inp:focus{border-color:var(--gem);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.sheet-actions{display:grid;grid-template-columns:1fr 2fr;gap:9px;margin-top:18px;}
 
-/* toast */
-.toast{position:fixed;top:70px;left:16px;right:16px;z-index:200;padding:14px 16px;border-radius:14px;background:var(--card);border:1px solid var(--border);font-size:13px;font-family:var(--mono);display:flex;align-items:center;gap:10px;transform:translateY(-20px);opacity:0;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);max-width:480px;margin:0 auto;box-shadow:0 8px 32px rgba(0,0,0,0.5);}
+/* ── TOAST ── */
+.toast{
+  position:fixed;top:68px;left:15px;right:15px;z-index:200;
+  padding:12px 15px;border-radius:13px;
+  background:var(--card);border:1px solid var(--border);
+  font-size:12px;font-family:var(--mono);
+  display:flex;align-items:center;gap:9px;
+  transform:translateY(-16px);opacity:0;
+  transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+  max-width:480px;margin:0 auto;
+  box-shadow:0 8px 30px rgba(0,0,0,0.6);
+}
 .toast.show{transform:none;opacity:1;}
-.toast.success{border-color:rgba(0,245,170,0.4);}
-.toast.error{border-color:rgba(255,85,102,0.4);color:var(--danger);}
-.toast.warn{border-color:rgba(255,184,77,0.4);color:var(--warn);}
-.toast-icon{font-size:18px;flex-shrink:0;}
+.toast.success{border-color:rgba(52,211,153,0.4);}
+.toast.error{border-color:rgba(248,113,113,0.4);color:var(--danger);}
+.toast.warn{border-color:rgba(251,191,36,0.35);color:var(--warn);}
+.toast.gem{border-color:rgba(167,139,250,0.4);color:var(--gem);}
+.toast-icon{font-size:16px;flex-shrink:0;}
 </style>
 </head>
 <body>
 
+<!-- TOPBAR -->
 <div class="topbar">
-  <div>
-    <div class="topbar-title">হাল<em>খাতা</em></div>
-    <div class="topbar-sub">VOICE · VISION · RETAIL ENGINE</div>
+  <div class="logo-area">
+    <div class="logo-v1">Haalkhata V02</div>
+    <div class="logo-v2">✦ Vision · Voice · Ledger</div>
   </div>
-  <div class="indicators">
-    <div class="pill" id="camPill"><div class="pill-dot"></div>CAM</div>
-    <div class="pill" id="micPill"><div class="pill-dot"></div>MIC</div>
-    <div class="pill" id="apiPill"><div class="pill-dot"></div>API</div>
+  <div class="top-pills">
+    <div class="tpill" id="camPill"><div class="tpill-dot"></div>CAM</div>
+    <div class="tpill" id="micPill"><div class="tpill-dot"></div>MIC</div>
+    <div class="tpill" id="gemPill"><div class="tpill-dot"></div>GEM</div>
   </div>
 </div>
 
 <div class="wrap">
 
-  <!-- API CONFIG -->
-  <div class="api-banner" id="apiBanner">
-    <div class="api-banner-icon">🔗</div>
-    <div style="flex:1">
-      <div class="api-banner-text" id="apiStatus">Enter your backend URL to enable real detection</div>
-      <div class="api-input-row">
-        <input class="api-input" id="apiUrl" placeholder="https://your-app.onrender.com" type="url"/>
-        <button class="btn btn-sm btn-warn" onclick="testApi()">Test</button>
-      </div>
-    </div>
-  </div>
+
 
   <!-- CAMERA -->
   <div class="section">
-    <div class="section-label">Live Camera</div>
+    <div class="sec-label">Live Camera</div>
     <div class="cam-card">
       <div id="videoWrap">
         <video id="video" autoplay muted playsinline></video>
         <canvas id="canvas"></canvas>
-        <div class="cam-badge">● REC</div>
+        <div class="corner corner-tl"></div>
+        <div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div>
+        <div class="corner corner-br"></div>
+        <div class="cam-badge">● LIVE</div>
         <div class="cam-idle" id="camIdle">
           <div class="cam-idle-icon">📷</div>
-          <div class="cam-idle-text">Tap to start camera</div>
+          <div class="cam-idle-text">Tap Start Camera</div>
         </div>
-        <div class="processing-overlay" id="procOverlay">
-          <div class="spinner"></div>
-          <div class="processing-text" id="procText">Detecting objects…</div>
+        <div class="proc-overlay" id="procOverlay">
+          <div class="gem-spinner"></div>
+          <div class="proc-text">ANALYSING</div>
+          <div class="proc-step" id="procStep">Analysing image…</div>
         </div>
-      </div>
-      <!-- annotated result image -->
-      <div class="annotated-wrap" id="annotatedWrap">
-        <img id="annotatedImg" src="" alt="Detection result"/>
-        <div class="annotated-label">▲ YOLO detection result with bounding boxes</div>
       </div>
       <div class="cam-actions">
-        <button class="btn btn-lg btn-green" id="btnCam" onclick="toggleCamera()">
-          <span class="btn-icon">📷</span> Start Camera
+        <button class="btn btn-lg btn-gem" id="btnCam" onclick="toggleCamera()">
+          📷 Start Camera
         </button>
         <button class="btn btn-lg btn-dark" id="btnCap" onclick="captureFrame()" disabled>
-          <span class="btn-icon">📸</span> Capture
+          📸 Capture
         </button>
       </div>
     </div>
@@ -237,7 +458,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 
   <!-- VOICE -->
   <div class="section">
-    <div class="section-label">Voice Control</div>
+    <div class="sec-label">Voice Control</div>
     <div class="voice-card">
       <div class="voice-inner">
         <div class="mic-btn" id="micBtn" onclick="toggleMic()">
@@ -259,12 +480,12 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
 
   <!-- COMMANDS -->
   <div class="section">
-    <div class="section-label">Voice Commands</div>
+    <div class="sec-label">Voice Commands</div>
     <div class="cmd-grid">
       <div class="cmd-btn" onclick="captureFrame()">
         <div class="cmd-emoji">📸</div>
         <div class="cmd-say">SAY "CAPTURE"</div>
-        <div class="cmd-desc">Detect objects in frame</div>
+        <div class="cmd-desc">Identify objects in frame</div>
       </div>
       <div class="cmd-btn" onclick="openSheet()">
         <div class="cmd-emoji">📝</div>
@@ -284,125 +505,98 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;bac
     </div>
   </div>
 
-  <!-- DETECTED -->
+  <!-- GEMINI RESULTS -->
   <div class="section">
-    <div class="section-label">Detected Objects</div>
-    <div class="detected-scroll" id="detScroll">
-      <div class="det-empty">Capture a frame to detect real objects</div>
+    <div class="sec-label">Detection Results</div>
+    <div id="resultArea">
+      <div class="det-empty">Capture a frame to identify every object in detail</div>
     </div>
   </div>
 
   <!-- LOG -->
   <div class="section">
-    <div class="section-label">Transaction Log</div>
+    <div class="sec-label">Transaction Log</div>
     <div class="log-card">
-      <div class="log-header">
-        <span class="log-title">Session Log</span>
-        <span class="log-count" id="logCount">0 entries</span>
+      <div class="log-hdr">
+        <span class="log-hdr-title">Session Log</span>
+        <span class="log-hdr-count" id="logCount">0 entries</span>
       </div>
-      <div class="log-entries" id="logEntries">
-        <div class="log-empty-msg">No transactions yet</div>
+      <div class="log-list" id="logList">
+        <div class="log-empty">No transactions yet</div>
       </div>
       <div class="log-footer">
-        <span class="log-footer-label">TOTAL</span>
+        <span class="log-foot-lbl">SESSION TOTAL</span>
         <span class="log-total" id="logTotal">৳ 0</span>
       </div>
     </div>
   </div>
 
-</div>
+</div><!-- /wrap -->
 
 <!-- BOTTOM NAV -->
-<div class="bottom-nav">
-  <button class="nav-btn nav-capture" onclick="captureFrame()">📸 Capture</button>
-  <button class="nav-btn nav-log" onclick="openSheet()">＋ Log</button>
-  <button class="nav-btn nav-export" onclick="exportLog()">💾</button>
+<div class="bnav">
+  <button class="bnav-btn bnav-capture" onclick="captureFrame()">✦ Capture</button>
+  <button class="bnav-btn bnav-log" onclick="openSheet()">＋ Log</button>
+  <button class="bnav-btn bnav-export" onclick="exportLog()">💾</button>
 </div>
 
 <!-- SHEET -->
-<div class="overlay" id="overlay" onclick="overlayClick(event)">
-  <div class="sheet" id="sheet">
+<div class="overlay" id="overlay" onclick="overlayTap(event)">
+  <div class="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title">Log Transaction</div>
     <div class="sheet-sub" id="sheetSub">Enter item details</div>
     <div class="field">
-      <label class="field-label">Product Name</label>
-      <input class="field-input" id="fProduct" placeholder="e.g. Rice, Soap, Biscuit" autocomplete="off"/>
+      <label class="field-lbl">Product Name</label>
+      <input class="field-inp" id="fProduct" placeholder="e.g. Rice, Soap, Biscuit" autocomplete="off"/>
     </div>
     <div class="field">
-      <label class="field-label">Category</label>
-      <input class="field-input" id="fCat" placeholder="e.g. Grocery, Personal Care" autocomplete="off"/>
+      <label class="field-lbl">Category</label>
+      <input class="field-inp" id="fCat" placeholder="e.g. Grocery, Personal Care" autocomplete="off"/>
     </div>
     <div class="field field-row">
       <div>
-        <label class="field-label">Quantity</label>
-        <input class="field-input" id="fQty" type="number" inputmode="numeric" min="1" placeholder="1"/>
+        <label class="field-lbl">Quantity</label>
+        <input class="field-inp" id="fQty" type="number" inputmode="numeric" min="1" placeholder="1"/>
       </div>
       <div>
-        <label class="field-label">Unit Price (৳)</label>
-        <input class="field-input" id="fPrice" type="number" inputmode="decimal" min="0" placeholder="0"/>
+        <label class="field-lbl">Unit Price (৳)</label>
+        <input class="field-inp" id="fPrice" type="number" inputmode="decimal" min="0" placeholder="0"/>
       </div>
     </div>
     <div class="sheet-actions">
       <button class="btn btn-md btn-dark" onclick="closeSheet()">Cancel</button>
-      <button class="btn btn-md btn-green" onclick="submitTx()">✓ Save Transaction</button>
+      <button class="btn btn-md btn-gem" onclick="submitTx()">✓ Save</button>
     </div>
   </div>
 </div>
 
+<!-- TOAST -->
 <div class="toast" id="toast">
-  <span class="toast-icon" id="toastIcon">✓</span>
+  <span class="toast-icon" id="toastIcon"></span>
   <span id="toastMsg"></span>
 </div>
 
 <script>
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let stream = null, recognition = null, isListening = false;
-let transactions = [], detectedObjects = [];
-let apiBaseUrl = localStorage.getItem('hk_api_url') || '';
+let transactions = [], geminiItems = [];
+let apiKey = 'placeholder'; // not used — detection via Render backend
+let backendUrl = 'https://haalkhata-engine.onrender.com';
 
-// restore saved URL
-if (apiBaseUrl) {
-  document.getElementById('apiUrl').value = apiBaseUrl;
-  updateApiUI(true);
-}
+// key is hardcoded — always active
+setKeyUI(true);
 
-// ── API CONFIG ────────────────────────────────────────────────────────────────
-function getApiUrl() {
-  const v = document.getElementById('apiUrl').value.trim().replace(/\/$/, '');
-  return v;
-}
+// ── API KEY ───────────────────────────────────────────────────────────────────
+function saveKey() {}
 
-async function testApi() {
-  const url = getApiUrl();
-  if (!url) { toast('Enter a URL first', 'warn', '?'); return; }
-  toast('Testing connection…', 'warn', '⏳');
-  try {
-    const r = await fetch(`${url}/health`, { signal: AbortSignal.timeout(8000) });
-    if (r.ok) {
-      apiBaseUrl = url;
-      localStorage.setItem('hk_api_url', url);
-      updateApiUI(true);
-      toast('API connected ✓', 'success', '✓');
-      speak('Backend connected. Ready to detect objects.');
-    } else {
-      throw new Error(`HTTP ${r.status}`);
-    }
-  } catch(e) {
-    updateApiUI(false);
-    toast(`Connection failed: ${e.message}`, 'error', '✗');
-  }
-}
-
-function updateApiUI(connected) {
-  const banner = document.getElementById('apiBanner');
-  const status = document.getElementById('apiStatus');
-  const pill   = document.getElementById('apiPill');
-  banner.classList.toggle('connected', connected);
-  status.textContent = connected
-    ? `✓ Connected to ${getApiUrl()}`
-    : 'Enter your backend URL to enable real detection';
-  pill.classList.toggle('on', connected);
+function setKeyUI(ok) {
+  const card   = document.getElementById('keyCard');
+  const status = document.getElementById('keyStatus');
+  const pill   = document.getElementById('gemPill');
+  if(card) card.classList.toggle('connected', ok);
+  if(status){ status.className = 'key-status' + (ok ? ' ok' : ''); status.textContent = ok ? '✓ Haalkhata Vision active' : 'Haalkhata Vision ready'; }
+  if(pill) pill.classList.toggle('on', ok);
 }
 
 // ── CAMERA ────────────────────────────────────────────────────────────────────
@@ -412,7 +606,7 @@ async function toggleCamera() {
     document.getElementById('video').style.display = 'none';
     document.getElementById('camIdle').style.display = '';
     document.getElementById('videoWrap').classList.remove('live');
-    document.getElementById('btnCam').innerHTML = '<span class="btn-icon">📷</span> Start Camera';
+    document.getElementById('btnCam').textContent = '📷 Start Camera';
     document.getElementById('btnCap').disabled = true;
     setPill('cam', false); return;
   }
@@ -425,144 +619,264 @@ async function toggleCamera() {
     v.srcObject = stream; v.style.display = 'block';
     document.getElementById('camIdle').style.display = 'none';
     document.getElementById('videoWrap').classList.add('live');
-    document.getElementById('btnCam').innerHTML = '<span class="btn-icon">⏹</span> Stop';
+    document.getElementById('btnCam').textContent = '⏹ Stop';
     document.getElementById('btnCap').disabled = false;
     setPill('cam', true);
     toast('Camera ready', 'success', '📷');
-    speak('Camera started. Tap Capture to detect objects.');
+    speak('Camera started. Tap Capture to identify objects.');
   } catch(e) {
     toast('Camera access denied', 'error', '✗');
   }
 }
 
-// ── CAPTURE & DETECT ──────────────────────────────────────────────────────────
+// ── CAPTURE & GEMINI DETECTION ────────────────────────────────────────────────
 async function captureFrame() {
-  const video = document.getElementById('video');
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-
-  // draw to canvas
-  canvas.width  = video.videoWidth  || 640;
-  canvas.height = video.videoHeight || 480;
-  if (video.videoWidth > 0) ctx.drawImage(video, 0, 0);
-
-  const url = getApiUrl();
-
-  if (!url) {
-    // ── DEMO MODE (no backend) ──────────────────────────────────────────────
-    runDemoDetection(ctx, canvas.width, canvas.height);
+  if (!apiKey) {
+    toast('API key missing', 'warn', '⚠');
+    speak('API key not configured.');
     return;
   }
 
-  // ── REAL DETECTION via API ─────────────────────────────────────────────────
-  showProcessing(true, 'Running YOLO + OCR…');
-  speak('Processing frame. Please wait.');
+  const video = document.getElementById('video');
+
+  if (!video.videoWidth) {
+    toast('Start camera first', 'warn', '⚠');
+    speak('Please start the camera first.');
+    return;
+  }
+
+  // offscreen canvas — avoids issues with the overlay canvas
+  const offscreen = document.createElement('canvas');
+  offscreen.width  = video.videoWidth;
+  offscreen.height = video.videoHeight;
+  offscreen.getContext('2d').drawImage(video, 0, 0);
+  const b64 = offscreen.toDataURL('image/jpeg', 0.85).split(',')[1];
+
+  showProc(true, 'Processing image…');
+  speak('Analysing image. Please wait.');
 
   try {
-    // get canvas as base64
-    const b64 = canvas.toDataURL('image/jpeg', 0.85);
+    setProc('Sending to Gemini agent…');
 
-    const resp = await fetch(`${url}/detect-base64`, {
+    const resp = await fetch(`${backendUrl}/gemini-detect`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: b64 }),
-      signal: AbortSignal.timeout(200000),
+      body: JSON.stringify({ image: `data:image/jpeg;base64,${b64}` }),
+      signal: AbortSignal.timeout(60000)
     });
 
-    if (!resp.ok) throw new Error(`API error ${resp.status}`);
+    if (!resp.ok) {
+      const err = await resp.json();
+      throw new Error(err.detail || `HTTP ${resp.status}`);
+    }
+
     const data = await resp.json();
+    const raw  = data.raw || '';
 
-    // show annotated image returned by backend
-    if (data.annotated) {
-      const wrap = document.getElementById('annotatedWrap');
-      document.getElementById('annotatedImg').src = `data:image/jpeg;base64,${data.annotated}`;
-      wrap.style.display = 'block';
-    }
+    if (!raw) throw new Error('Empty response from agent');
 
-    detectedObjects = data.detections || [];
-    renderDetected();
-    toast(`${data.count} object${data.count!==1?'s':''} detected`, 'success', '🎯');
-    speak(`Detected ${data.count} object${data.count!==1?'s':''}. You can log them below.`);
-
-    // auto-speak first item
-    if (detectedObjects.length > 0) {
-      const first = detectedObjects[0];
-      const name  = first.ocr_text || first.label;
-      speak(`First item: ${name}. Confidence ${Math.round(first.confidence*100)} percent.`);
-    }
+    setProc('Parsing results…');
+    parseAndRender(raw);
 
   } catch(e) {
-    toast(`Detection failed: ${e.message}`, 'error', '✗');
-    speak('Detection failed. Please check your connection.');
+    toast(`${e.message}`, 'error', '✗');
+    speak('Detection failed. Please try again.');
+    console.error(e);
   } finally {
-    showProcessing(false);
+    showProc(false);
   }
 }
 
-function showProcessing(show, text='') {
-  const el = document.getElementById('procOverlay');
-  el.classList.toggle('show', show);
-  if (text) document.getElementById('procText').textContent = text;
-}
+function parseAndRender(raw) {
+  let parsed = null;
+  try {
+    const clean = raw.replace(/```json|```/g, '').trim();
+    parsed = JSON.parse(clean);
+  } catch(e) {
+    renderRaw(raw); return;
+  }
 
-// ── DEMO MODE (shown when no API url set) ─────────────────────────────────────
-const MOCK = [
-  {label:'bottle',confidence:.91,ocr_text:'Mineral Water 500ml',bbox:[30,50,150,200]},
-  {label:'cup',confidence:.86,ocr_text:'Paper Cup',bbox:[170,60,280,190]},
-  {label:'bag',confidence:.88,ocr_text:'Grocery Bag',bbox:[300,40,430,210]},
-  {label:'phone',confidence:.94,ocr_text:'Samsung Device',bbox:[50,230,170,360]},
-  {label:'soap',confidence:.90,ocr_text:'Lifebuoy Soap',bbox:[200,220,320,350]},
-];
+  geminiItems = parsed.items || [];
+  const summary = parsed.scene_summary || '';
 
-function runDemoDetection(ctx, W, H) {
-  const count = 1 + Math.floor(Math.random() * 3);
-  const items = shuffled([...MOCK]).slice(0, count);
-  detectedObjects = [];
+  if (!geminiItems.length) { renderRaw(raw); return; }
 
-  items.forEach((item, i) => {
-    const x1 = 30 + i * Math.floor((W-120)/Math.max(count,1));
-    const y1 = 50 + Math.random() * 80;
-    const bw = 110 + Math.random() * 70, bh = 130 + Math.random() * 50;
-    ctx.strokeStyle = '#00f5aa'; ctx.lineWidth = 2;
-    ctx.strokeRect(x1, y1, bw, bh);
-    ctx.fillStyle = 'rgba(0,245,170,0.88)';
-    ctx.fillRect(x1, y1-22, Math.min(bw+20, W-x1), 20);
-    ctx.fillStyle = '#000'; ctx.font = 'bold 11px monospace';
-    ctx.fillText(`${item.label} · ${item.ocr_text}`, x1+4, y1-7);
-    detectedObjects.push({ ...item, bbox:[x1,y1,x1+bw,y1+bh] });
+  const area = document.getElementById('resultArea');
+  area.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <span class="result-gem-badge">✦ HAALKHATA</span>
+        <span class="result-title">${geminiItems.length} item${geminiItems.length>1?'s':''} identified</span>
+      </div>
+      <div class="result-body">
+        ${summary ? `<div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:0 2px">${summary}</div>` : ''}
+        <div class="det-scroll" id="detScroll"></div>
+      </div>
+    </div>`;
+
+  const scroll = document.getElementById('detScroll');
+  geminiItems.forEach((item, i) => {
+    const confClass = item.confidence === 'High' ? 'high' : 'mid';
+    const card = document.createElement('div');
+    card.className = 'det-item';
+    card.style.animationDelay = `${i * 0.06}s`;
+    card.innerHTML = `
+      <div class="det-name">${item.name}</div>
+      <div class="det-detail">${item.brand !== 'Unknown' ? item.brand + ' · ' : ''}${item.category}</div>
+      ${item.label_text ? `<div class="det-detail" style="color:var(--accent)">"${item.label_text}"</div>` : ''}
+      ${item.notes ? `<div class="det-detail">${item.notes}</div>` : ''}
+      <div class="det-conf ${confClass}">${item.confidence}</div>
+      <button class="btn btn-sm btn-cyan" style="margin-top:3px" onclick="openForItem(${i})">Log ➜</button>`;
+    scroll.appendChild(card);
   });
 
-  renderDetected();
-  toast(`[DEMO] ${count} object${count>1?'s':''} — connect API for real detection`, 'warn', '⚠');
-  speak(`Demo mode. Detected ${count} simulated objects. Connect your backend for real detection.`);
+  const first = geminiItems[0];
+  speak(`Detected ${geminiItems.length} item${geminiItems.length>1?'s':''}. First item: ${first.name}. ${first.notes||''}`);
+  toast(`${geminiItems.length} items identified`, 'gem', '✦');
 }
 
-function renderDetected() {
-  const el = document.getElementById('detScroll');
-  if (!detectedObjects.length) {
-    el.innerHTML = '<div class="det-empty">No objects detected yet</div>';
+function renderRaw(text) {
+  document.getElementById('resultArea').innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <span class="result-gem-badge">✦ HAALKHATA</span>
+        <span class="result-title">Raw Response</span>
+      </div>
+      <div class="result-body">
+        <div class="gem-raw">${text}</div>
+      </div>
+    </div>`;
+  speak('Detection complete. Check the results on screen.');
+  toast('Detection complete', 'gem', '✦');
+}
+
+function renderResults(items, summary) {
+  if (!items.length) {
+    document.getElementById('resultArea').innerHTML = '<div class="det-empty">No objects detected — try again</div>';
+    speak('No objects detected. Try again.');
     return;
   }
-  el.innerHTML = detectedObjects.map((o, i) => `
-    <div class="det-card">
-      <div class="det-card-label">${o.label}</div>
-      <div class="det-card-ocr">${o.ocr_text || '—'}</div>
-      <div class="det-card-conf">${(o.confidence*100).toFixed(0)}%</div>
-      <button class="btn btn-sm btn-blue" style="margin-top:4px" onclick="openForDetected(${i})">Log ➜</button>
-    </div>
-  `).join('');
+
+  const area = document.getElementById('resultArea');
+  area.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <span class="result-gem-badge">✦ HAALKHATA</span>
+        <span class="result-title">${items.length} item${items.length > 1 ? 's' : ''} detected</span>
+      </div>
+      <div class="result-body">
+        ${summary ? `<div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:0 2px">${summary}</div>` : ''}
+        <div class="det-scroll" id="detScroll"></div>
+      </div>
+    </div>`;
+
+  const scroll = document.getElementById('detScroll');
+  items.forEach((item, i) => {
+    const confClass = item.confidence === 'High' ? 'high' : 'mid';
+    const card = document.createElement('div');
+    card.className = 'det-item';
+    card.style.animationDelay = `${i * 0.06}s`;
+    card.innerHTML = `
+      <div class="det-name">${item.name}</div>
+      ${item.label_text ? `<div class="det-detail" style="color:var(--accent)">"${item.label_text}"</div>` : ''}
+      <div class="det-detail">${item.notes}</div>
+      <div class="det-conf ${confClass}">${item.confidence}</div>
+      <button class="btn btn-sm btn-cyan" style="margin-top:3px" onclick="openForItem(${i})">Log ➜</button>`;
+    scroll.appendChild(card);
+  });
+
+  const first = items[0];
+  speak(`Detected ${items.length} item${items.length > 1 ? 's' : ''}. First item: ${first.name}. ${first.notes}`);
+  toast(`${items.length} items detected`, 'gem', '✦');
+}
+  let parsed = null;
+
+  try {
+    // strip markdown code fences if present
+    const clean = raw.replace(/```json|```/g, '').trim();
+    parsed = JSON.parse(clean);
+  } catch(e) {
+    // fallback — show raw text
+    renderRaw(raw);
+    return;
+  }
+
+  geminiItems = parsed.items || [];
+  const summary = parsed.scene_summary || '';
+
+  if (!geminiItems.length) {
+    renderRaw(raw); return;
+  }
+
+  // build result UI
+  const area = document.getElementById('resultArea');
+  area.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <span class="result-gem-badge">✦ HAALKHATA</span>
+        <span class="result-title">${geminiItems.length} item${geminiItems.length>1?'s':''} identified</span>
+      </div>
+      <div class="result-body">
+        ${summary ? `<div style="font-family:var(--mono);font-size:11px;color:var(--muted);padding:0 2px">${summary}</div>` : ''}
+        <div class="det-scroll" id="detScroll"></div>
+      </div>
+    </div>`;
+
+  const scroll = document.getElementById('detScroll');
+  geminiItems.forEach((item, i) => {
+    const confClass = item.confidence === 'High' ? 'high' : 'mid';
+    const card = document.createElement('div');
+    card.className = 'det-item';
+    card.style.animationDelay = `${i * 0.06}s`;
+    card.innerHTML = `
+      <div class="det-name">${item.name}</div>
+      <div class="det-detail">${item.brand !== 'Unknown' ? item.brand + ' · ' : ''}${item.category}</div>
+      ${item.label_text ? `<div class="det-detail" style="color:var(--accent)">"${item.label_text}"</div>` : ''}
+      ${item.notes ? `<div class="det-detail">${item.notes}</div>` : ''}
+      <div class="det-conf ${confClass}">${item.confidence}</div>
+      <button class="btn btn-sm btn-cyan" style="margin-top:3px" onclick="openForItem(${i})">Log ➜</button>`;
+    scroll.appendChild(card);
+  });
+
+  // announce first item
+  const first = geminiItems[0];
+  const announcement = `Detected ${geminiItems.length} item${geminiItems.length>1?'s':''}. First item: ${first.name}${first.brand && first.brand!=='Unknown' ? ', ' + first.brand : ''}. ${first.notes || ''}`;
+  speak(announcement);
+  toast(`${geminiItems.length} items identified`, 'gem', '✦');
 }
 
-function openForDetected(i) {
-  const o = detectedObjects[i];
-  document.getElementById('fProduct').value = o.ocr_text || o.label;
-  document.getElementById('fCat').value     = '';
+function renderRaw(text) {
+  document.getElementById('resultArea').innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <span class="result-gem-badge">✦ HAALKHATA</span>
+        <span class="result-title">Raw Response</span>
+      </div>
+      <div class="result-body">
+        <div class="gem-raw">${text}</div>
+      </div>
+    </div>`;
+  speak('Detection complete. Check the results on screen.');
+  toast('Detection complete', 'gem', '✦');
+}
+
+function openForItem(i) {
+  const item = geminiItems[i];
+  document.getElementById('fProduct').value = item.name;
+  document.getElementById('fCat').value     = item.category || '';
   document.getElementById('fQty').value     = 1;
   document.getElementById('fPrice').value   = '';
-  document.getElementById('sheetSub').textContent =
-    `${o.label} · ${(o.confidence*100).toFixed(0)}% confidence`;
+  document.getElementById('sheetSub').textContent = `${item.brand !== 'Unknown' ? item.brand + ' · ' : ''}${item.category}`;
   openSheet();
-  speak(`Logging ${o.ocr_text || o.label}. Enter quantity and price.`);
+  speak(`Logging ${item.name}. Enter quantity and price.`);
+}
+
+function showProc(show, text='') {
+  document.getElementById('procOverlay').classList.toggle('show', show);
+  if (text) setProc(text);
+}
+function setProc(text) {
+  document.getElementById('procStep').textContent = text;
 }
 
 // ── VOICE ─────────────────────────────────────────────────────────────────────
@@ -606,7 +920,7 @@ function stopMic() {
   document.getElementById('voiceLabel').classList.remove('on');
   setPill('mic',false);
 }
-function handleVoice(txt) {
+function handleVoice(txt){
   if(txt.includes('capture'))      captureFrame();
   else if(txt.includes('log'))     openSheet();
   else if(txt.includes('total'))   speakTotal();
@@ -615,7 +929,7 @@ function handleVoice(txt) {
   else if(document.getElementById('overlay').classList.contains('show')) autoFill(txt);
   else toast(`"${txt}" not recognised`,'warn','?');
 }
-function autoFill(txt) {
+function autoFill(txt){
   const nums=txt.match(/\d+(?:\.\d+)?/g);
   if(nums&&nums[0]&&!document.getElementById('fQty').value) document.getElementById('fQty').value=nums[0];
   if(nums&&nums[1]&&!document.getElementById('fPrice').value) document.getElementById('fPrice').value=nums[1];
@@ -623,29 +937,29 @@ function autoFill(txt) {
 }
 
 // ── TTS ───────────────────────────────────────────────────────────────────────
-function speak(text) {
+function speak(text){
   if(!window.speechSynthesis) return;
   speechSynthesis.cancel();
   const u=new SpeechSynthesisUtterance(text);
-  u.lang='en-US'; u.rate=0.95;
+  u.lang='en-US'; u.rate=0.92;
   const v=speechSynthesis.getVoices().find(v=>/google|natural/i.test(v.name));
   if(v) u.voice=v;
   speechSynthesis.speak(u);
 }
-function speakTotal() {
+function speakTotal(){
   const t=transactions.reduce((s,x)=>s+x.total,0);
   speak(`Session total is ${t.toFixed(2)} Taka across ${transactions.length} transactions.`);
-  toast(`৳ ${t.toFixed(2)} · ${transactions.length} items`,'success','🔊');
+  toast(`৳ ${t.toFixed(2)} · ${transactions.length} items`,'gem','✦');
 }
 
 // ── TRANSACTIONS ──────────────────────────────────────────────────────────────
-function openSheet() {
+function openSheet(){
   document.getElementById('overlay').classList.add('show');
   setTimeout(()=>document.getElementById('fProduct').focus(),400);
 }
-function closeSheet(){ document.getElementById('overlay').classList.remove('show'); }
-function overlayClick(e){ if(e.target===document.getElementById('overlay')) closeSheet(); }
-function submitTx() {
+function closeSheet(){document.getElementById('overlay').classList.remove('show');}
+function overlayTap(e){if(e.target===document.getElementById('overlay')) closeSheet();}
+function submitTx(){
   const product=document.getElementById('fProduct').value.trim();
   const cat=document.getElementById('fCat').value.trim()||'General';
   const qty=parseFloat(document.getElementById('fQty').value);
@@ -659,10 +973,10 @@ function submitTx() {
   toast(`${product} × ${qty} = ৳ ${entry.total.toFixed(2)}`,'success','✓');
   speak(`Logged ${qty} ${product} at ${price} Taka. Total ${entry.total.toFixed(2)} Taka.`);
 }
-function renderLog() {
-  const el=document.getElementById('logEntries');
-  if(!transactions.length){ el.innerHTML='<div class="log-empty-msg">No transactions yet</div>'; }
-  else {
+function renderLog(){
+  const el=document.getElementById('logList');
+  if(!transactions.length){el.innerHTML='<div class="log-empty">No transactions yet</div>';}
+  else{
     el.innerHTML=transactions.map(t=>`
       <div class="log-row">
         <div><div class="log-name">${t.product}</div><div class="log-meta">${t.cat} · ${t.ts}</div></div>
@@ -679,16 +993,15 @@ function clearLog(){
 }
 function exportLog(){
   if(!transactions.length){toast('Nothing to export','warn','?');return;}
-  const data={exported:new Date().toISOString(),total:transactions.reduce((s,t)=>s+t.total,0),transactions};
+  const data={exported:new Date().toISOString(),engine:'Haalkhata Engine V02',total:transactions.reduce((s,t)=>s+t.total,0),transactions};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
-  a.download=`haalkhata_${Date.now()}.json`; a.click();
+  a.download=`haalkhata_v02_${Date.now()}.json`; a.click();
   toast('Exported ✓','success','💾'); speak('Transaction log exported.');
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────────────
-function setPill(which,on){ document.getElementById(which+'Pill').classList.toggle('on',on); }
-function shuffled(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function setPill(which,on){document.getElementById(which+'Pill').classList.toggle('on',on);}
 function toast(msg,type='success',icon='✓'){
   const el=document.getElementById('toast');
   document.getElementById('toastIcon').textContent=icon;
@@ -703,16 +1016,17 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&document.getElementById('overlay').classList.contains('show')) submitTx();
 });
 window.speechSynthesis&&speechSynthesis.addEventListener('voiceschanged',()=>{});
-// Keep Render backend alive — ping every 10 minutes
-function keepAlive() {
-  const url = getApiUrl();
-  if (url) {
-    fetch(`${url}/health`).catch(() => {});
-  }
+
+// keep-alive ping for V01 backend if needed
+function keepAlive(){
+  const url = localStorage.getItem('hk_api_url');
+  if(url) fetch(`${url}/health`).catch(()=>{});
 }
-setInterval(keepAlive, 10 * 60 * 1000);  
+setInterval(keepAlive, 10 * 60 * 1000);
+
 renderLog();
-toast('হালখাতা ready — connect API for real detection','warn','🔗');
+speak('Haalkhata Engine ready. Tap Start Camera and then Capture to identify objects.');
+toast('Haalkhata Engine V02 ready','gem','✦');
 </script>
 </body>
 </html>
