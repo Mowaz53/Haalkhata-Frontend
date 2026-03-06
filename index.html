@@ -581,21 +581,13 @@ body::after{
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let stream = null, recognition = null, isListening = false;
 let transactions = [], geminiItems = [];
-let apiKey = 'placeholder'; // not used — detection via Render backend
 let backendUrl = 'https://haalkhata-engine.onrender.com';
-
-// key is hardcoded — always active
-setKeyUI(true);
 
 // ── API KEY ───────────────────────────────────────────────────────────────────
 function saveKey() {}
 
 function setKeyUI(ok) {
-  const card   = document.getElementById('keyCard');
-  const status = document.getElementById('keyStatus');
-  const pill   = document.getElementById('gemPill');
-  if(card) card.classList.toggle('connected', ok);
-  if(status){ status.className = 'key-status' + (ok ? ' ok' : ''); status.textContent = ok ? '✓ Haalkhata Vision active' : 'Haalkhata Vision ready'; }
+  const pill = document.getElementById('gemPill');
   if(pill) pill.classList.toggle('on', ok);
 }
 
@@ -1017,14 +1009,14 @@ document.addEventListener('keydown',e=>{
 });
 window.speechSynthesis&&speechSynthesis.addEventListener('voiceschanged',()=>{});
 
-// keep-alive ping for V01 backend if needed
+// keep backend alive — ping every 10 minutes
 function keepAlive(){
-  const url = localStorage.getItem('hk_api_url');
-  if(url) fetch(`${url}/health`).catch(()=>{});
+  fetch(`${backendUrl}/health`).catch(()=>{});
 }
 setInterval(keepAlive, 10 * 60 * 1000);
 
 renderLog();
+setKeyUI(true);
 speak('Haalkhata Engine ready. Tap Start Camera and then Capture to identify objects.');
 toast('Haalkhata Engine V02 ready','gem','✦');
 </script>
